@@ -10,10 +10,10 @@ canvas.width = 800;
 canvas.height = 600;
 
 let score = 0;
-let currentStage = 1;
+let currentStage = 0;
 let timeLeft = 30;
 let targets = [];
-let gameActive = true;
+let gameActive = false;
 
 // 타겟 종류 정의
 const targetTypes = [
@@ -127,6 +127,7 @@ function endStage() {
     gameActive = false;
     overlay.classList.remove('hidden');
     document.getElementById('msg-text').innerText = `STAGE ${currentStage} 완료!`;
+    document.getElementById('msg-btn').innerText = "다음 스테이지";
 }
 
 function nextStage() {
@@ -145,4 +146,4 @@ function nextStage() {
     gameLoop();
 }
 
-gameLoop();
+// 초기에는 gameLoop를 실행하지 않습니다. nextStage()에서 실행 시작!
