@@ -31,7 +31,7 @@ class Target {
         this.size = config.size;
         this.color = config.color;
         this.points = config.points;
-        this.speedY = -(Math.random() * 3 + 2 + currentStage); // 스테이지 높을수록 빠름
+        this.speedY = -(Math.random() * 3 + 2 + currentStage) * 2; // 높이를 2배로 하기 위해 속도 2배 (중력과 함께 조정)
         this.speedX = (Math.random() - 0.5) * 4;
         this.isHit = false;
     }
@@ -39,7 +39,7 @@ class Target {
     update() {
         this.y += this.speedY;
         this.x += this.speedX;
-        this.speedY += 0.1; // 중력 효과
+        this.speedY += 0.2; // 중력 효과 (속도 2배에 맞춰 중력도 2배로 조정하여 높이 2배 구현)
     }
 
     draw() {
@@ -86,7 +86,10 @@ function drawFlash(x, y) {
 }
 
 function spawnTarget() {
-    if(gameActive && Math.random() < 0.03 + (currentStage * 0.01)) {
+    // 스테이지별 최대 동시 등장 객체 수 설정
+    let maxTargets = currentStage <= 3 ? 3 : (currentStage <= 6 ? 4 : 5);
+
+    if(gameActive && targets.length < maxTargets && Math.random() < 0.03 + (currentStage * 0.01)) {
         targets.push(new Target());
     }
 }
