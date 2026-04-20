@@ -5,6 +5,15 @@ const scoreTxt = document.getElementById('score');
 const timerTxt = document.getElementById('timer');
 const overlay = document.getElementById('msg-overlay');
 
+// 효과음 설정 (무료 효과음 라이브러리 사용)
+const gunshotSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2168/2168-preview.mp3');
+gunshotSound.volume = 0.4;
+
+const breakSound = new Audio('https://assets.mixkit.co/active_storage/sfx/263/263-preview.mp3');
+const explodeSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
+breakSound.volume = 0.5;
+explodeSound.volume = 0.5;
+
 // 게임 설정
 canvas.width = 800;
 canvas.height = 600;
@@ -71,6 +80,10 @@ class Target {
 canvas.addEventListener('mousedown', (e) => {
     if (!gameActive) return;
 
+    // 발포 소리 재생
+    gunshotSound.currentTime = 0;
+    gunshotSound.play().catch(e => console.log("오디오 재생 실패:", e));
+
     const rect = canvas.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
@@ -81,6 +94,15 @@ canvas.addEventListener('mousedown', (e) => {
         const dist = Math.hypot(t.x - mouseX, t.y - mouseY);
         
         if (dist < t.size) {
+            // 타겟 종류에 따른 명중 효과음 재생
+            if (t.type === 'plate') {
+                breakSound.currentTime = 0;
+                breakSound.play();
+            } else {
+                explodeSound.currentTime = 0;
+                explodeSound.play();
+            }
+
             score += t.points;
             scoreTxt.innerText = score;
             targets.splice(i, 1); // 타겟 제거
