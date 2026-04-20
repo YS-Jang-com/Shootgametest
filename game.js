@@ -31,15 +31,20 @@ class Target {
         this.size = config.size;
         this.color = config.color;
         this.points = config.points;
-        this.speedY = -(Math.random() * 3 + 2 + currentStage) * 2; // 높이를 2배로 하기 위해 속도 2배 (중력과 함께 조정)
-        this.speedX = (Math.random() - 0.5) * 4;
+
+        // 스테이지별 속도 배율 설정 (현재 속도 기준)
+        const speedMult = currentStage <= 3 ? 0.5 : (currentStage <= 6 ? 0.7 : 0.9);
+
+        this.speedY = -(Math.random() * 3 + 2 + currentStage) * 2 * speedMult; 
+        this.speedX = (Math.random() - 0.5) * 4 * speedMult;
+        this.gravity = 0.2 * speedMult; // 중력도 속도 배율에 맞춰 조절하여 자연스러운 움직임 유지
         this.isHit = false;
     }
 
     update() {
         this.y += this.speedY;
         this.x += this.speedX;
-        this.speedY += 0.2; // 중력 효과 (속도 2배에 맞춰 중력도 2배로 조정하여 높이 2배 구현)
+        this.speedY += this.gravity; 
     }
 
     draw() {
