@@ -35,9 +35,16 @@ class Target {
         // 스테이지별 속도 배율 설정 (현재 속도 기준)
         const speedMult = currentStage <= 3 ? 0.5 : (currentStage <= 6 ? 0.7 : 0.9);
 
-        this.speedY = -(Math.random() * 3 + 2 + currentStage) * 2 * speedMult; 
+        // 수직 속도 설정: 1단계부터 높이 올라갈 수 있도록 기본 속도 범위를 조정하고 배율을 적용함
+        const baseSpeedY = (Math.random() * 3 + 12); 
+        this.speedY = -baseSpeedY * speedMult; 
+        
+        // 모든 스테이지에서 화면 상단을 넘지 않으면서 일정한 높이(약 530px)까지 도달하도록 중력 계산
+        // H = u^2 / (2g) => g = u^2 / (2H) 식을 이용하여 중력을 역산함
+        const targetHeight = 530; 
+        this.gravity = (this.speedY * this.speedY) / (2 * targetHeight);
+        
         this.speedX = (Math.random() - 0.5) * 4 * speedMult;
-        this.gravity = 0.2 * speedMult; // 중력도 속도 배율에 맞춰 조절하여 자연스러운 움직임 유지
         this.isHit = false;
     }
 
